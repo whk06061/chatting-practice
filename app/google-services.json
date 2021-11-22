@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "367284585837",
+    "project_id": "chatting-practice-2",
+    "storage_bucket": "chatting-practice-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367284585837:android:d5d0ffe7a85dc053440664",
+        "android_client_info": {
+          "package_name": "com.yum.chatting_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367284585837-dockhi4nv2r99q049ev1c0jp7mdce07p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdGhzSRLOoUdXUO4SpLcEsL1p_FsONeIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367284585837-dockhi4nv2r99q049ev1c0jp7mdce07p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,7 +14,7 @@ class RVAdapter(val items: MutableList<ChatData>, val context: Context) :
     RecyclerView.Adapter<RVAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVAdapter.ViewHolder {
-        //뷰홀더를 생성(레이아웃 생성)하는 코드 작성성
+        //뷰홀더를 생성(레이아웃 생성)하는 코드 작성
        val view = LayoutInflater.from(context).inflate(R.layout.rv_item, parent, false)
         return ViewHolder(view)
     }

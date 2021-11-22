@@ -81,17 +81,6 @@ class MainActivity : AppCompatActivity() {
         //        items.add(ChatData("냥냥이","저두요"))
 
 
-        //리사이클러뷰 아이템 클릭리스너 등록
-//        rvAdapter.setItemClickListener(object : RVAdapter.ItemClickListener {
-//            override fun onClick(view: View, position: Int) {
-//                //Toast.makeText(view.context,"클릭",Toast.LENGTH_LONG).show() //view.context 대신 this 쓰면 오류
-//                //Log.d("뭐짓", view.context.toString()) //-> MainActivity 출력
-//                val intent = Intent(view.context, ProfileActivity::class.java)
-//                intent.putExtra("이메일", email)
-//                startActivity(intent)
-//            }
-//        })
-
         rv.adapter = rvAdapter
         rv.layoutManager = LinearLayoutManager(this)
 

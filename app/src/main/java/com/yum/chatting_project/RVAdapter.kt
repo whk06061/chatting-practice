@@ -18,29 +18,11 @@ class RVAdapter(val items: MutableList<ChatData>, val context: Context) :
        val view = LayoutInflater.from(context).inflate(R.layout.rv_item, parent, false)
         return ViewHolder(view)
     }
-    /* 추가 */
-//    interface ItemClickListener{
-//        fun onClick(view: View, position: Int)
-//    }
-    /* 추가 */
-//    private lateinit var _itemClickListener: ItemClickListener
-    /* 추가 */
-//    fun setItemClickListener(itemClickListener: ItemClickListener){
-//        this._itemClickListener = itemClickListener
-//    }
 
     override fun onBindViewHolder(holder: RVAdapter.ViewHolder, position: Int) {
         //뷰홀더가 재활용될때 실행되는 메소드 작성
         holder.bindItems(items[position])
 
-//        holder.itemView.setOnClickListener {
-//            _itemClickListener.onClick(it, position)
-//        }
-
-        /* 추가 */
-//        holder.itemView.findViewById<Button>(R.id.rv_profile_btn).setOnClickListener {
-//            _itemClickListener.onClick(it, position)
-//        }
     }
 
     override fun getItemCount(): Int {

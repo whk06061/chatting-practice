@@ -64,7 +64,8 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-                rvAdapter.notifyDataSetChanged() //items에 변화가 생기면 반영
+                //items에 변화가 생기면 반영
+                rvAdapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {

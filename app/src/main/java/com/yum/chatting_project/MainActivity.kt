@@ -107,35 +107,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
-        /*
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                items.clear()
-                for (dataModel in snapshot.children) {
-                    Log.d("데이터", dataModel.toString())
-                    val saved_email = dataModel.getValue<ChatData>()!!.nickname
-                    //내 닉네임은 "나", 상대방 닉네임은 이메일
-                    if (saved_email == email) {
-                        items.add(ChatData("나", dataModel.getValue<ChatData>()!!.msg, saved_email))
-                    } else {
-                        items.add(
-                            ChatData(
-                                dataModel.getValue<ChatData>()!!.email,
-                                dataModel.getValue<ChatData>()!!.msg,
-                                saved_email
-                            )
-                        )
-                    }
-                }
-                //items에 변화가 생기면 반영
-                rvAdapter.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })*/
 
         //Log.d("회원정보", auth.currentUser!!.uid)
 

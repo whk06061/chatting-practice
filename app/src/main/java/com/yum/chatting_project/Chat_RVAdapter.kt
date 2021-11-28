@@ -7,19 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class RVAdapter(val items: MutableList<ChatData>, val context: Context) :
-    RecyclerView.Adapter<RVAdapter.ViewHolder>() {
+class Chat_RVAdapter(val items: MutableList<ChatData>, val context: Context) :
+    RecyclerView.Adapter<Chat_RVAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RVAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Chat_RVAdapter.ViewHolder {
         //뷰홀더를 생성(레이아웃 생성)하는 코드 작성
-       val view = LayoutInflater.from(context).inflate(R.layout.rv_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.chat_rv_item, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RVAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: Chat_RVAdapter.ViewHolder, position: Int) {
         //뷰홀더가 재활용될때 실행되는 메소드 작성
         holder.bindItems(items[position])
 

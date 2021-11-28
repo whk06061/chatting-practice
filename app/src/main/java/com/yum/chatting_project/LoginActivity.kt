@@ -33,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
-                        val intent = Intent(this,MainActivity::class.java)
+                        val intent = Intent(this,ChatListActivity::class.java)
                         startActivity(intent)
                         Toast.makeText(this,"로그인 성공!",Toast.LENGTH_LONG).show()
                         //Log.d("회원정보", auth.currentUser!!.uid)

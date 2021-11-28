@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         //버튼을 눌러 메뉴를 오픈할 수도 있고, 왼쪽에서 오른쪽으로 스왑해 오픈할 수 있습니다.
         //DrawerLayout의 id에 직접 openDrawer()메소드를 사용할 수 있습니다.
         findViewById<Button>(R.id.menu_btn).setOnClickListener{
-            findViewById<DrawerLayout>(R.id.main_drawer_layout).openDrawer(GravityCompat.START)
+            findViewById<DrawerLayout>(R.id.main_drawer_layout).openDrawer(GravityCompat.END)
         }
 
         //채팅방 키 값 받아옴

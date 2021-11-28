@@ -42,7 +42,9 @@ class MainActivity : AppCompatActivity() {
 
         //리사이클러뷰 어댑터 연결
         val rv = findViewById<RecyclerView>(R.id.recycler_view)
-        val rvAdapter = RVAdapter(items, this)
+        val rvAdapter = Chat_RVAdapter(items, this)
+        rv.adapter = rvAdapter
+        rv.layoutManager = LinearLayoutManager(this)
 
         //파이어베이스에 데이터가 업데이트 될때마다 실행
         myRef.addValueEventListener(object : ValueEventListener {
@@ -82,8 +84,7 @@ class MainActivity : AppCompatActivity() {
         //        items.add(ChatData("냥냥이","저두요"))
 
 
-        rv.adapter = rvAdapter
-        rv.layoutManager = LinearLayoutManager(this)
+
 
 
         val sendBtn = findViewById<Button>(R.id.btn_chat_send)

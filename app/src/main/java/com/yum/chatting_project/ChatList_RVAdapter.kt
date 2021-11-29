@@ -8,9 +8,17 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class ChatList_RVAdapter(val items: MutableList<ChatListData>, val context: Context, val chatroomkeys: MutableList<String>) :
     RecyclerView.Adapter<ChatList_RVAdapter.ViewHolder>() {
+    private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -36,6 +44,12 @@ class ChatList_RVAdapter(val items: MutableList<ChatListData>, val context: Cont
                 Intent(context,MainActivity::class.java).apply {
                     putExtra("채팅방키",chatroomkey)
                 }.run { context.startActivity(this) }
+
+                //(임시) 채팅방 클릭 시 그 채팅방에 참여하는 걸로 간주!
+                auth = Firebase.auth
+                database = Firebase.database.reference
+                val current_uid = auth.currentUser!!.uid.toString()
+                database.child("ChatRooms").child(chatroomkey!!).child("users").child(current_uid).setValue(true)
             }
         }
     }

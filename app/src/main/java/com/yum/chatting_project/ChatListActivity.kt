@@ -41,18 +41,19 @@ class ChatListActivity : AppCompatActivity() {
 
         //1. 파이어베이스에서 채팅방 불러오기
         database = Firebase.database.reference
-        database.child("chatrooms").addValueEventListener(object : ValueEventListener {
+        database.child("ChatRooms").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 items.clear()
+                chatroomkeys.clear()
                 for (dataModel in snapshot.children) {
-                    //Log.d("아이템1", dataModel.toString())
+                    Log.d("아이템1", dataModel.toString())
                     items.add(dataModel.getValue(ChatListData::class.java)!!)
                     //채팅방 고유 키 저장
                     chatroomkeys.add(dataModel.key!!)
                 }
                 //items에 변화가 생기면 반영
                 rvAdapter.notifyDataSetChanged()
-                //Log.d("키", chatroomkey_list.toString())
+                //Log.d("키", chatroomkeys.toString())
                 //Log.d("아이템2", items.toString())
             }
 
@@ -80,7 +81,7 @@ class ChatListActivity : AppCompatActivity() {
                 val chatroom_title =
                     mAlertDialog.findViewById<EditText>(R.id.dialog_editText_chatroom_name)
                 val chatListData = ChatListData(chatroom_title!!.text.toString())
-                database.child("chatrooms").push().setValue(chatListData)
+                database.child("ChatRooms").push().setValue(chatListData)
 
                 //다이얼로그 사라지게
                 mAlertDialog.dismiss()

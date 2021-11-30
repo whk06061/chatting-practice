@@ -135,54 +135,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        /*val mValueEventListener1 = object : ValueEventListener {
-            //나중에 과부하 줄이려면 ChildEventListener 사용하고(추가된 데이터만 반환함) 리사이클러뷰에 그 아이템만 추가하는 방식 써야될듯
-            override fun onDataChange(snapshot: DataSnapshot) {
-                chats.clear()
-                for (dataModel in snapshot.children) {
-                    //Log.d("형검사", dataModel.value!!.javaClass.name.toString())
-                    Log.d("데이터1", dataModel.toString())
-                    //채팅방 데이터베이스에서 채팅데이터 찾기
-                    if (dataModel.value!!.javaClass.name == "java.util.HashMap") {
-                        //Log.d("데이터2", dataModel.toString())
-                        val saved_email = dataModel.getValue<ChatData>()!!.email
-                        val saved_uid = dataModel.getValue<ChatData>()!!.uid
-                        //내 닉네임은 "나", 상대방 닉네임은 이메일
-                        if (saved_uid == current_uid) {
-                            chats.add(
-                                ChatData(
-                                    "나",
-                                    dataModel.getValue<ChatData>()!!.msg,
-                                    saved_email, saved_uid
-                                )
-                            )
-                            //Log.d("데이터", items.toString())
-                        } else {
-                            chats.add(
-                                ChatData(
-                                    saved_email,
-                                    dataModel.getValue<ChatData>()!!.msg,
-                                    saved_email, saved_uid
-                                )
-                            )
-                        }
-                    }
-                    // 채팅방 데이터베이스에서 title 값 찾기
-                    else if (dataModel.value!!.javaClass.name == "java.lang.String") {
-                        /*val rv_chatroomtitle = findViewById<TextView>(R.id.tv_chatroom_title)
-                        rv_chatroomtitle.setText(dataModel.getValue<String>())*/
-                    }
-                }
-                //items에 변화가 생기면 반영
-                rvAdapter.notifyDataSetChanged()
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        }
-*/
         val mValueEventListener2 = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 TODO("Not yet implemented")

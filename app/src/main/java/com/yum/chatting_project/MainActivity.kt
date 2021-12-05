@@ -119,6 +119,13 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        //채팅방 제목 가져오기
+        //데이터 한번만 가져올때는 get()함수 사용
+        database.child("ChatRooms").child(chatroomkey!!).get().addOnSuccessListener {
+            //Log.d("뭘까", it.child("title").value.toString())
+            val title = it.child("title").value.toString()
+            findViewById<TextView>(R.id.tv_chatroom_title).setText(title)
+        }
 
         //채팅방 참여자 업데이트 감지
         val ChatRoom_Users_ChildEventListener = object : ChildEventListener {
@@ -131,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                         val nickname = snapshot.getValue<UserData>()!!.nickname
                         roomusers.add(nickname)
-                        //Log.d("추가됨_닉네임",nickname)
+                        Log.d("추가됨_닉네임",nickname)
                         roomuserRvadapter.notifyDataSetChanged()
                     }
 
@@ -179,7 +186,7 @@ class MainActivity : AppCompatActivity() {
         //파이어베이스에 데이터가 업데이트 될때마다 실행
         database.child("Messages").child(chatroomkey!!)
             .addChildEventListener(Messages_ChildEventListener)
-
+        //채팅방 참여자 정보 업데이트 될때마다 실행
         database.child("ChatRooms").child(chatroomkey!!).child("users")
             .addChildEventListener(ChatRoom_Users_ChildEventListener)
 

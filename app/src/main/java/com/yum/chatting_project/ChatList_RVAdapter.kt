@@ -1,5 +1,6 @@
 package com.yum.chatting_project
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -14,7 +15,11 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-class ChatList_RVAdapter(val items: MutableList<ChatListData>, val context: Context, val chatroomkeys: MutableList<String>) :
+class ChatList_RVAdapter(
+    val items: MutableList<ChatListData>,
+    val context: Context,
+    val chatroomkeys: MutableList<String>
+) :
     RecyclerView.Adapter<ChatList_RVAdapter.ViewHolder>() {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
@@ -41,15 +46,14 @@ class ChatList_RVAdapter(val items: MutableList<ChatListData>, val context: Cont
             title.setText(item.title)
 
             itemView.setOnClickListener {
-                Intent(context,MainActivity::class.java).apply {
-                    putExtra("채팅방키",chatroomkey)
-                }.run { context.startActivity(this) }
-
+                val intent = Intent(context, MainActivity::class.java).putExtra("채팅방키", chatroomkey)
+                context.startActivity(intent)
+                (context as Activity).finish()
                 //(임시) 채팅방 클릭 시 그 채팅방에 참여하는 걸로 간주!
-                auth = Firebase.auth
+                /*auth = Firebase.auth
                 database = Firebase.database.reference
                 val current_uid = auth.currentUser!!.uid.toString()
-                database.child("ChatRooms").child(chatroomkey!!).child("users").child(current_uid).setValue(true)
+                database.child("ChatRooms").child(chatroomkey!!).child("users").child(current_uid).setValue(true)*/
             }
         }
     }

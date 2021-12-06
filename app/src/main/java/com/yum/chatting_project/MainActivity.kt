@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         roomUser_rv.layoutManager = LinearLayoutManager(this)
 
         //채팅 보낼때 감지
-        database.child("Messages").child(chatroomkey!!).addChildEventListener(
+        database.child("ChatRooms").child(chatroomkey!!).child("messages").addChildEventListener(
             object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     // Log.d("데이터", "추가됨")
@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity() {
             val chatData =
                 ChatData(current_email, message.text.toString(), current_email, current_uid)
             //myRef.push().setValue(chatData)
-            database.child("Messages").child(chatroomkey!!).push().setValue(chatData)
+            database.child("ChatRooms").child(chatroomkey!!).child("messages").push().setValue(chatData)
             message.setText("")
 
 

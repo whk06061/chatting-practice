@@ -55,8 +55,14 @@ class MainActivity : AppCompatActivity() {
             //chatRooms에서 사용자 삭제
             database.child("ChatRooms").child(chatroomkey!!).child("users").child(current_uid)
                 .removeValue()
-            //UserRooms에서 채팅방 키 삭제
+            //UserRooms에서 채팅방 키 삭제하여 해당 유저의 화면에서 안보이게함
             database.child("UserRooms").child(current_uid).removeValue()
+            //채팅방에 유저 아무도 없으면 파이어베이스에서 채팅방 데이터 삭제
+            database.child("ChatRooms").child(chatroomkey!!).child("users").get().addOnSuccessListener {
+                if(it.value == null){
+                    database.child("ChatRooms").child(chatroomkey!!).removeValue()
+                }
+            }
         }
 
 

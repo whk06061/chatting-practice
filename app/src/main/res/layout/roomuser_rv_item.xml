@@ -19,6 +19,6 @@
         android:layout_marginLeft="20dp"
         android:text="닉네임"
         android:textColor="#000000"
-        android:textSize="20sp" />
+        android:textSize="15sp" />
 
 </LinearLayout>

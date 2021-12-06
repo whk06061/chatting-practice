@@ -52,8 +52,9 @@ class ChatListActivity : AppCompatActivity() {
             .addChildEventListener(object : ChildEventListener {
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     //사용자가 참여한 채팅방을 리사이클러뷰에 추가
-                    database.child("ChatRooms").child(snapshot.value.toString()).get().addOnSuccessListener {
+                    database.child("ChatRooms").child(snapshot.key.toString()).get().addOnSuccessListener {
                         val key = it.key
+                        //Log.d("뭘까나", it.toString())
                         items.add(it.getValue(ChatListData::class.java)!!)
                         //채팅방 고유 키 저장
                         chatroomkeys.add(key!!)
@@ -137,7 +138,7 @@ class ChatListActivity : AppCompatActivity() {
                     database.child("ChatRooms").child(chatroomKey!!).child("users").child(user)
                         .setValue(true)
                     //각 사용자가 무슨 채팅방에 참여하고 있는지 저장
-                    database.child("UserRooms").child(user).push().setValue(chatroomKey)
+                    database.child("UserRooms").child(user).child(chatroomKey).setValue(true)
                 }
 
                 //다이얼로그 사라지게

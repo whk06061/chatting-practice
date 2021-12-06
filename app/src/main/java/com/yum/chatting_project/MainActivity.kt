@@ -40,7 +40,8 @@ class MainActivity : AppCompatActivity() {
         //채팅방 키 값 받아옴
         val intent = getIntent()
         val chatroomkey = intent.getStringExtra("채팅방키");
-        //Log.d("키값", data!!)
+
+        val return_intent = Intent(this, ChatListActivity::class.java)
 
         //버튼을 눌러 메뉴를 오픈할 수도 있고, 왼쪽에서 오른쪽으로 스왑해 오픈할 수 있습니다.
         //DrawerLayout의 id에 직접 openDrawer()메소드를 사용할 수 있습니다.
@@ -50,10 +51,13 @@ class MainActivity : AppCompatActivity() {
 
         //채팅방 나가기
         findViewById<Button>(R.id.btn_exit_room).setOnClickListener {
-            //사용자 값 false로
-            database.child("ChatRooms").child(chatroomkey!!).child("users").child(current_uid).setValue(false)
-        }
 
+            //chatRooms에서 사용자 삭제
+            database.child("ChatRooms").child(chatroomkey!!).child("users").child(current_uid)
+                .removeValue()
+            //UserRooms에서 채팅방 키 삭제
+            database.child("UserRooms").child(current_uid).removeValue()
+        }
 
 
         //리사이클러뷰에 들어갈 아이템 추가
@@ -73,51 +77,118 @@ class MainActivity : AppCompatActivity() {
         roomUser_rv.layoutManager = LinearLayoutManager(this)
 
         //채팅 보낼때 감지
-        val Messages_ChildEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-               // Log.d("데이터", "추가됨")
-                val saved_email = snapshot.getValue<ChatData>()!!.email
-                val saved_uid = snapshot.getValue<ChatData>()!!.uid
-                //내 닉네임은 "나", 상대방 닉네임은 이메일
-                if (saved_uid == current_uid) {
-                    chats.add(
-                        ChatData(
-                            "나",
-                            snapshot.getValue<ChatData>()!!.msg,
-                            saved_email, saved_uid
+        database.child("Messages").child(chatroomkey!!).addChildEventListener(
+            object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    // Log.d("데이터", "추가됨")
+                    val saved_email = snapshot.getValue<ChatData>()!!.email
+                    val saved_uid = snapshot.getValue<ChatData>()!!.uid
+                    //내 닉네임은 "나", 상대방 닉네임은 이메일
+                    if (saved_uid == current_uid) {
+                        chats.add(
+                            ChatData(
+                                "나",
+                                snapshot.getValue<ChatData>()!!.msg,
+                                saved_email, saved_uid
+                            )
                         )
-                    )
-                    //Log.d("데이터", items.toString())
-                } else {
-                    chats.add(
-                        ChatData(
-                            saved_email,
-                            snapshot.getValue<ChatData>()!!.msg,
-                            saved_email, saved_uid
+                        //Log.d("데이터", items.toString())
+                    } else {
+                        chats.add(
+                            ChatData(
+                                saved_email,
+                                snapshot.getValue<ChatData>()!!.msg,
+                                saved_email, saved_uid
+                            )
                         )
-                    )
+                    }
+                    //items에 변화가 생기면 반영
+                    rvAdapter.notifyDataSetChanged()
                 }
-                //items에 변화가 생기면 반영
-                rvAdapter.notifyDataSetChanged()
-            }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
-            }
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    TODO("Not yet implemented")
+                }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        }
+            }
+        )
+
+        //채팅방 참여자 업데이트 감지
+        database.child("ChatRooms").child(chatroomkey!!).child("users")
+            .addChildEventListener(object : ChildEventListener {
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    Log.d("추가됨", snapshot.key.toString())
+
+                    //참여자의 회원정보 가져오기
+                    val userQuery =
+                        database.child("Users").orderByKey().equalTo(snapshot.key.toString())
+                    userQuery.addChildEventListener(object : ChildEventListener {
+                        override fun onChildAdded(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                            val nickname = snapshot.getValue<UserData>()!!.nickname
+                            roomusers.add(nickname)
+                            Log.d("추가됨_닉네임", nickname)
+                            roomuserRvadapter.notifyDataSetChanged()
+                        }
+
+                        override fun onChildChanged(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onChildRemoved(snapshot: DataSnapshot) {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onChildMoved(
+                            snapshot: DataSnapshot,
+                            previousChildName: String?
+                        ) {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+
+                    })
+                    //roomusers.add("사용자이름")
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    Log.d("업데이트됨", snapshot.toString())
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    startActivity(return_intent)
+                    finish()
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    Log.d("업데이트됨", snapshot.toString())
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("업데이트됨", error.toString())
+                }
+
+            })
 
         //채팅방 제목 가져오기
         //데이터 한번만 가져올때는 get()함수 사용
@@ -126,70 +197,6 @@ class MainActivity : AppCompatActivity() {
             val title = it.child("title").value.toString()
             findViewById<TextView>(R.id.tv_chatroom_title).setText(title)
         }
-
-        //채팅방 참여자 업데이트 감지
-        val ChatRoom_Users_ChildEventListener = object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("추가됨", snapshot.key.toString())
-
-                //참여자의 회원정보 가져오기
-                val userQuery = database.child("Users").orderByKey().equalTo(snapshot.key.toString())
-                userQuery.addChildEventListener(object :ChildEventListener{
-                    override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                        val nickname = snapshot.getValue<UserData>()!!.nickname
-                        roomusers.add(nickname)
-                        Log.d("추가됨_닉네임",nickname)
-                        roomuserRvadapter.notifyDataSetChanged()
-                    }
-
-                    override fun onChildChanged(
-                        snapshot: DataSnapshot,
-                        previousChildName: String?
-                    ) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onChildRemoved(snapshot: DataSnapshot) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                        TODO("Not yet implemented")
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        TODO("Not yet implemented")
-                    }
-
-                })
-                //roomusers.add("사용자이름")
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d("업데이트됨", snapshot.toString())
-            }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        }
-
-        //파이어베이스에 데이터가 업데이트 될때마다 실행
-        database.child("Messages").child(chatroomkey!!)
-            .addChildEventListener(Messages_ChildEventListener)
-        //채팅방 참여자 정보 업데이트 될때마다 실행
-        database.child("ChatRooms").child(chatroomkey!!).child("users")
-            .addChildEventListener(ChatRoom_Users_ChildEventListener)
-
 
         //채팅 보낼시 이벤트
         val sendBtn = findViewById<Button>(R.id.btn_chat_send)

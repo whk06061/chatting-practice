@@ -8,19 +8,42 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class Chat_RVAdapter(val items: MutableList<ChatData>, val context: Context) :
-    RecyclerView.Adapter<Chat_RVAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Chat_RVAdapter.ViewHolder {
+    private lateinit var auth: FirebaseAuth
+    val RIGHT_TALK = 0
+    val LEFT_TALK = 1
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         //뷰홀더를 생성(레이아웃 생성)하는 코드 작성
-        val view = LayoutInflater.from(context).inflate(R.layout.chat_rv_item, parent, false)
-        return ViewHolder(view)
+        return when(viewType){
+            RIGHT_TALK ->{
+                val view = LayoutInflater.from(context).inflate(R.layout.chat_rv_item_me, parent, false)
+                RightViewHolder(view)
+            }
+            LEFT_TALK ->{
+                val view = LayoutInflater.from(context).inflate(R.layout.chat_rv_item, parent, false)
+                LeftViewHolder(view)
+            } else ->{
+                val view = LayoutInflater.from(context).inflate(R.layout.chat_rv_item, parent, false)
+                LeftViewHolder(view)
+            }
+        }
+
     }
 
-    override fun onBindViewHolder(holder: Chat_RVAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //뷰홀더가 재활용될때 실행되는 메소드 작성
-        holder.bindItems(items[position])
+       if(holder is LeftViewHolder){
+           holder.bindItems(items[position])
+       } else if(holder is RightViewHolder){
+           holder.bindItems(items[position])
+       }
 
     }
 
@@ -28,7 +51,20 @@ class Chat_RVAdapter(val items: MutableList<ChatData>, val context: Context) :
         return items.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    override fun getItemViewType(position: Int): Int {
+        auth = Firebase.auth
+        val current_uid = auth.currentUser!!.uid.toString()
+        val chatData = items.get(position)
+        if(chatData.uid.equals(current_uid)){
+            //내 채팅인 경우 0
+            return RIGHT_TALK
+        }else{
+            //다른 사람 채팅인 경우 1
+            return LEFT_TALK
+        }
+    }
+
+    inner class LeftViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(item: ChatData) {
             val rv_nickname = itemView.findViewById<TextView>(R.id.rv_nickname_textView)
             rv_nickname.text = item.nickname
@@ -43,6 +79,13 @@ class Chat_RVAdapter(val items: MutableList<ChatData>, val context: Context) :
                     putExtra("닉네임", item.nickname)
                 }.run { context.startActivity(this) }
             }
+
+        }
+    }
+    inner class RightViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bindItems(item: ChatData) {
+            val rv_msg = itemView.findViewById<TextView>(R.id.rv_msg_textView)
+            rv_msg.text = item.msg
 
         }
     }
